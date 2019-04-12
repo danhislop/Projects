@@ -1,2 +1,2 @@
 # Projects
-Projects I have created
+Various simple (single file) projects for sharing
