@@ -1,0 +1,56 @@
+{
+    "nbformat_minor": 2, 
+    "cells": [
+        {
+            "source": "# Data Visualization: Crime in San Francisco\n\nThis project was a class assignment for a Data Visualization course. What I enjoyed was combining data from Police incidents in SF with geographical data marking out SF neighborhoods.  The class provided the question and the dataset, my work below was to combine it to specifications:", 
+            "cell_type": "markdown", 
+            "metadata": {}
+        }, 
+        {
+            "source": "## Goal: Structure the geo data by neighborhood, then create a Choropleth map to visualize crime in San Francisco.\n\nimport pandas as pd\nimport folium\n\npolice_file = '../datasets/Police_Department_Incidents_-_Previous_Year__2016_.csv'\n#police_file = pd.read_csv('https://ibm.box.com/shared/static/nmcltjmocdi8sd5tk93uembzdec8zyaq.csv') ## downloadable\nsf_input = pd.read_csv(police_file, index_col=0)\n\n# group by neighborhood\nsf = sf_input.groupby('PdDistrict').count()\nsf = pd.DataFrame(sf,columns=['Category'])  # remove unneeded columns\nsf.reset_index(inplace=True)   # default index, otherwise groupby column becomes index\nsf.rename(columns={'PdDistrict':'Neighborhood','Category':'Count'}, inplace=True)\nsf.sort_values(by='Count', inplace=True, ascending=False)\n#print(sf)\n\n# San Francisco latitude and longitude values\nlatitude = 37.77\nlongitude = -122.42\nsf_neighborhood_geo = '../datasets/san-francisco.geojson'\n\n# Create map\nsf_map = folium.Map(\n       location=[latitude,longitude],\n       zoom_start=12)\n\n# Use json file  TEST based on class\nsf_map.choropleth(\n       geo_data=sf_neighborhood_geo,\n       data=sf,\n       columns=['Neighborhood','Count'],\n       key_on='feature.properties.DISTRICT',\n       fill_color='YlOrRd',\n       fill_opacity='0.7',\n       line_opacity='0.2',\n       legend_name='Crime Rate in San Francisco, by Neighborhood')\n\n# display the map\nsf_map", 
+            "cell_type": "code", 
+            "metadata": {}, 
+            "outputs": [
+                {
+                    "output_type": "error", 
+                    "evalue": "No module named 'folium'", 
+                    "traceback": [
+                        "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m", 
+                        "\u001b[0;31mImportError\u001b[0m                               Traceback (most recent call last)", 
+                        "\u001b[0;32m<ipython-input-1-ac648e2aa8f6>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      2\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      3\u001b[0m \u001b[0;32mimport\u001b[0m \u001b[0mpandas\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0mpd\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 4\u001b[0;31m \u001b[0;32mimport\u001b[0m \u001b[0mfolium\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      5\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      6\u001b[0m \u001b[0mpolice_file\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m'../datasets/Police_Department_Incidents_-_Previous_Year__2016_.csv'\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n", 
+                        "\u001b[0;31mImportError\u001b[0m: No module named 'folium'"
+                    ], 
+                    "ename": "ImportError"
+                }
+            ], 
+            "execution_count": 1
+        }, 
+        {
+            "source": "", 
+            "cell_type": "code", 
+            "metadata": {}, 
+            "outputs": [], 
+            "execution_count": null
+        }
+    ], 
+    "metadata": {
+        "kernelspec": {
+            "display_name": "Python 3.5", 
+            "name": "python3", 
+            "language": "python"
+        }, 
+        "language_info": {
+            "mimetype": "text/x-python", 
+            "nbconvert_exporter": "python", 
+            "version": "3.5.5", 
+            "name": "python", 
+            "pygments_lexer": "ipython3", 
+            "file_extension": ".py", 
+            "codemirror_mode": {
+                "version": 3, 
+                "name": "ipython"
+            }
+        }
+    }, 
+    "nbformat": 4
+}
