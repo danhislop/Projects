@@ -1,0 +1,2 @@
+[dancred]
+password = Minson1!
