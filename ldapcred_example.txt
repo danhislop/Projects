@@ -1,3 +1,0 @@
-[my_account]
-username = 3amlabs\my_username
-password = my_password
