@@ -9,24 +9,51 @@ Purpose: supports compare.py
 import config
 import pandas as pd
 import configparser
+import logging
 
-def csv_reader(filename):
+
+def csv_reader(filename, caller):
     '''
-    purpose:    use pandas to read in csv's.  but putting in own function, exceptions can be spelled out
-    input:      filename to read in
+    purpose:    use pandas to read in csv's.  
+    input:      filename = filename to read in, caller=string (ldap or source) telling function which arguments read_csv should use
+        csv input file must have a single header row with at least columns named 'Last' and 'First'
     output:     dataframe to pass back
     '''
-    
+    logging.info('%s CSV is about to be ingested', filename)
     try:
-        dataframe = pd.read_csv(filename, index_col=None, header=None)
+        if caller == 'ldap':
+            dataframe = pd.read_csv(filename, index_col=None, header=None) # works for ldap
+        elif caller == 'source':
+            dataframe = pd.read_csv(filename) # works for census/terms
+        else:
+            logging.warning('When calling this function you must specify ldap or source, instead of %s', caller)
     except pd.errors.EmptyDataError:
-        print('\n\n Empty data error - is the csv file empty?  The file is specified in config.ldap_under_review \n\n')
+        print('\n\n Empty data error - is the csv file empty?  The filename is specified in config.ldap_under_review \n\n')
         return
     except pd.errors.ParserError:
-        print('\n\n Parser error - is the csv file missing rows? The file is specified in config.ldap_under_review \n\n')
+        print('\n\n Parser error - is the csv file missing rows? The filename is specified in config.ldap_under_review \n\n')
         return
     return(dataframe)   
-
+    
+def xlsx_reader(filename):
+    '''
+    purpose:    use pandas to read in excel files. 
+    input:      filename to read in.  Excel file must:
+        1. Have case-sensitive column headers 'Last Name' and 'First Name'
+        2. Have no extra/empty rows before headers - which is usually the case with census/term provided by sox team
+    output:     dataframe to pass back
+    '''
+    logging.info('%s EXCEL is about to be ingested', filename)
+    
+    try:
+        dataframe = pd.read_excel(filename, index_col=None, header=0)
+    except pd.errors.EmptyDataError:
+        print('\n\n Empty data error - is the excel file empty?  The filename is specified in config.ldap_under_review \n\n')
+        return
+    except pd.errors.ParserError:
+        print('\n\n Parser error - is the csv file missing rows? The filename is specified in config.ldap_under_review \n\n')
+        return
+    return(dataframe)
     
 def ingest(sourcetype):
     '''
@@ -36,17 +63,40 @@ def ingest(sourcetype):
     '''
     
     file_to_ingest = config.paths[config.env][sourcetype+"_path"]
-    df = clean(pd.read_csv(file_to_ingest))
-    df['source']=sourcetype
-    df['fullName']=df['First']+' '+df['Last']
-    print('\n **** loaded csv file for ',sourcetype, ', with ', len(df.index), ' rows')
+
+
+    if file_to_ingest.endswith('.csv'):
+        df = clean(csv_reader(file_to_ingest, 'source'))  
+        df['source']=sourcetype
+        df['fullName']=df['First']+' '+df['Last']
+        
+    elif file_to_ingest.endswith('xlsx'):
+        df = xlsx_reader(file_to_ingest)
+        # the next line assumes the xlsx file's first row is header and column names are as follows:
+        df.rename(columns={'First Name':'First','Last Name':'Last','Email - Primary Work':'Email'}, inplace=True)
+
+        #separate out First, Last columns for cleaning so that email doesn't lose its @.characters
+        df1 = clean(df[['First','Last']])
+        # bring back together with lower-cased email:
+        if {'Email'}.issubset(df.columns):
+            df = pd.concat([df1, df.Email.astype(str).str.lower()], axis=1, sort=False)
+
+        # add source and fullName columns:
+        df['source']=sourcetype
+        df['fullName']=df['First']+' '+df['Last']
+
+    else:
+        logging.warning('%s will not work: file type must be either .csv or .xlsx', file_to_ingest)
+        print('file type must be either .csv or .xlsx')
+
+    logging.info('%s now ingested with %s rows and ready to process', file_to_ingest, len(df.index))
+
     if type != 'users':   #terms and census (not users) sometimes have duplicates which throws off the matching
         df = df.drop_duplicates(subset = ['fullName'], keep='last')
-    print('**** after dropping duplicates, this dataframe now has ', len(df.index))
-    print('\n  list starts with: \n', df.head(9),'\n\n','------------------------'*3)
+    logging.info('%s Dataframe now has %s rows, after dropping duplicates', file_to_ingest, len(df.index))
+    print('\n The sourcetype -->',sourcetype, '<-- dataframe starts with: \n', df.head(9),'\n\n','------------------------'*3)
     
-    return(df)
-    
+    return(df)    
     
 
 def input_ldapnames(): 
@@ -60,15 +110,16 @@ def input_ldapnames():
     '''    
     userlist=[]
     file_to_ingest = config.paths[config.env]["ldapusers_path"]
-    df = csv_reader(file_to_ingest)
+    df = csv_reader(file_to_ingest, 'ldap')
 
-    # feedback: try/except possibilities
     try:
         userlist = df[0].values.tolist() 
     except Exception:
         print ("\n\n Hit an error turning the input file into a list, check that the userlist is populated \n\n")
+        logging.error('Hit an error turning the input file into a list, check that the userlist is populated')
         return
-    print("\n About to perform an LDAP lookup against this userlist: \n\n", list(userlist), "\n\n")
+    logging.info('About to perform an LDAP lookup against this userlist %s', list(userlist))
+    #print("\n About to perform an LDAP lookup against this userlist: \n\n", list(userlist), "\n\n")
     
     return(userlist)
     
@@ -99,15 +150,16 @@ def matchlists(dataframe_to_test,dataframe_of_truth,result_string):
     input: two dataframes to be matched
     output: new df of names which are in both dataframes
     '''
-    
+    logging.info('Begin matching lists')
     matched_dataframe = pd.merge(dataframe_to_test, dataframe_of_truth, how='outer')
     matches = matched_dataframe[matched_dataframe.duplicated(subset='fullName', keep='last')] # keeps only duplicates
     if matches.empty == False:
         matches.loc[:,'result'] = result_string
         print('\n\n\n these app users are on ',result_string,' list \n', matches)
+        logging.info('Found matches on %s', result_string)
     else: 
         print('\n\n There were no ',result_string, '\n\n') #likely no term matches when input is ldap/ssulookups
-    
+        logging.info('There were no matches found on %s', result_string)
     return(matches)
     
     

@@ -14,11 +14,14 @@ import config
 import util
 import write_output
 import ldap
+import logging
 
 
 def ldaplookup(names):
     '''
-    input: a list of linux usernames
+    input: a list of linux usernames, format:
+        bwagner
+        edherd
     goal: lookup each username against ldap and return the fullname, mailname, and email address
         this will make it easier to compare them to lists of terminated and active employees, 
         since those lists do not contain usernames, only full names
@@ -30,8 +33,28 @@ def ldaplookup(names):
     con = ldap.initialize(config.ldap_server)
     
     # At this point, we're connected as an anonymous user, must use username/pwd from config file
-    dn, local_pw =  util.parse_local_config(config.pwdfile)
-    con.simple_bind_s(dn,local_pw)
+    try:
+        dn, local_pw =  util.parse_local_config(config.pwdfile)
+    except FileNotFoundError:
+        logging.error('Cannot find the local credentials file')
+
+    logging.info('About to establish LDAP binding')    
+    try: 
+        con.simple_bind_s(dn,local_pw)
+    except ldap.INVALID_CREDENTIALS as e:
+        logging.error("There was a problem with the ldap.INVALID_CREDENTIALS:")
+        logging.error(e)
+        raise
+    except ldap.SERVER_DOWN as e:
+        logging.error("There was a problem connecting to LDAP: Double check the connectivity to the URL in config.py")
+        logging.error(e)
+        raise
+    except:
+        logging.error("Having trouble with LDAP")
+        raise
+    logging.info('LDAP binding established')
+
+
     #initialization complete
 
     lookupcount = 0
@@ -45,7 +68,10 @@ def ldaplookup(names):
     for i in names:
         lookupcount +=1
         lookup = '(sAMAccountName='+i+')'
-        result = con.search_s(ldap_base, ldap.SCOPE_SUBTREE, lookup, ['cn','mailNickname', 'mail'])
+        try:
+            result = con.search_s(ldap_base, ldap.SCOPE_SUBTREE, lookup, ['cn','mailNickname', 'mail'])
+        except ldap.OPERATIONS_ERROR:
+            logging.error('operations error, did ldap bind correctly?')
 
 
         try:
@@ -76,7 +102,8 @@ def ldaplookup(names):
 
 def main():
     
-
+    logging.info('Starting ldap lookup routine')
+    
     # Create a python list of linux usernames from the ldap_under_review .csv listed in config.py 
     linux_usernames = util.input_ldapnames()
     
