@@ -1,5 +1,9 @@
 [my_account]
+<<<<<<< HEAD
 username = 3amlabs\danhi
+=======
+username = mydomain\myusername
+>>>>>>> 42098b679bfc6878a25d5337d03e5348ac1c0384
 password = my*_password
 
 
