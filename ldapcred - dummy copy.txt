@@ -1,5 +1,5 @@
 [my_account]
-username = 3amlabs\danhi
+username = mydomain\myusername
 password = my*_password
 
 
