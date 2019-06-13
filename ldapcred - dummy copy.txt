@@ -1,6 +1,10 @@
 [my_account]
 <<<<<<< HEAD
+<<<<<<< HEAD
 username = 3amlabs\danhi
+=======
+username = mydomain\myusername
+>>>>>>> 42098b679bfc6878a25d5337d03e5348ac1c0384
 =======
 username = mydomain\myusername
 >>>>>>> 42098b679bfc6878a25d5337d03e5348ac1c0384
