@@ -9,6 +9,7 @@ Purpose: formats and writes dataframe into an xlsx file
 
 import config
 import pandas as pd
+import logging
 
 writer = pd.ExcelWriter(config.paths[config.env]['namecompare_output'])
 
@@ -21,6 +22,7 @@ def excel_sheet(dataframe, label, column_names):
         output: excel sheets ready to write - requires excel_workbook function to produce output
     '''
     dataframe.to_excel(writer, label, index=True, columns=column_names)
+
     
     
 def excel_workbook():
@@ -36,13 +38,13 @@ def excel_workbook():
     worksheet.set_zoom(120)
     red_format = workbook.add_format({'bg_color':'#FFC7CE','font_color': '#9C0006'})
     green_format = workbook.add_format({'bg_color':'#C6EFCE','font_color': '#006100'})
-    worksheet1.conditional_format('F1:F300', {'type':'cell','criteria': 'equal to','value':'"matched_term_list"','format':red_format}) 
+    worksheet1.conditional_format('F1:F300', {'type':'cell','criteria': 'equal to','value':'"matched_terms"','format':red_format}) 
     worksheet1.conditional_format('F1:F300', {'type':'cell','criteria': 'equal to','value':'"matched_census"','format':green_format})        
     for i in writer.sheets.values():
         i.set_column(1,5,20)
         
     writer.save()
-
+    logging.info('Output has been written to %s',config.paths[config.env]['namecompare_output'])
 
 
 def write_csv(data_to_write):   
@@ -53,5 +55,6 @@ def write_csv(data_to_write):
     '''  
     
     data_to_write.to_csv(config.paths[config.env]["ldap_output"])
-    print("\n\n CSV file written to : ",config.paths[config.env]["ldap_output"])   
+    print("\n\n CSV file written to : ",config.paths[config.env]["ldap_output"])  
+
     

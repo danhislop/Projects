@@ -13,9 +13,9 @@ import util
 import ldaplookup
 import pandas as pd
 import write_output
+import logging
 
 pd.options.mode.chained_assignment = None 
-
 
 def main():
 
@@ -40,6 +40,7 @@ def main():
     # now find those that haven't matched either list.  These should be human reviewed.
     users_clear = pd.merge(users,clear_cases, how='outer')
     unclear_cases = users_clear[~users_clear['result'].isin(['matched_census', 'matched_terms'])]
+
     
     
     # When fullnames aren't matched, finding a Last Name match might help 
@@ -54,11 +55,20 @@ def main():
     print(maybes[['users_to_audit','fullName_on_census','fullName_on_termlist','source_y']])
     
     #--------create output--------------------------
-    
+
     # Column Names for different purposes
-    output_columns = ["Last","First","source","fullName"]
-    result_columns = ["Last","First","source","fullName", "result"]
-    maybe_columns= ['users_to_audit','fullName_on_census','fullName_on_termlist','source_y']
+
+    if config.run_namecompare_against_ldap_results == 'yes':
+            # Includes "user" to match linux name to full name    
+            output_columns = ["User","Last","First","source","fullName"]
+            result_columns = ["User","Last","First","source","fullName", "result"]
+            maybe_columns= ["User","users_to_audit","fullName_on_census","fullName_on_termlist","source_y"]
+    else:
+            # No "user" column
+            output_columns = ["Last","First","source","fullName"]
+            result_columns = ["Last","First","source","fullName", "result"]
+            maybe_columns= ["users_to_audit","fullName_on_census","fullName_on_termlist","source_y"]
+
                     
     
     # Write Results
@@ -75,10 +85,18 @@ def main():
     
     # Write everything into a workbook and save
     write_output.excel_workbook()
+    logging.info('-----Name Compare is Complete-----------------------')
+    logging.info('----------------------------------------------------')
+
+
+# Start logging
+logging.basicConfig(filename='namecompare.log', filemode='w', level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+logging.info('-----Starting name compare -----------------------')
 
 
 # Determine whether to first run ldaplookup. if so, then its output will be used for namecompare in main()
 if config.run_namecompare_against_ldap_results == 'yes':
+    logging.info('Triggering ldap lookup since run_namecompare_against_ldap_results is %s ', config.run_namecompare_against_ldap_results)
     ldaplookup.main()
     print("\n Triggering ldaplookup first \n")
     
