@@ -52,7 +52,7 @@ Some apps only provide usernames, making it hard to match against full names sho
 *  Confirm the ldap server address listed in config.py is accurate. 
 *  Use the file 'ldapcred_example.txt' as a template to input your username/password, then save the file as ldapcred.txt in same folder as the .py files.
 
-# How to Execute: Execute namecompare.py 
+# How to Execute:
 * Use your IDE to execute/Run the namecompare.py.  Watch for errors in the console or namecompare.log. 
 
 # How to Read Results
@@ -62,6 +62,9 @@ Some apps only provide usernames, making it hard to match against full names sho
 * Often these will be nickname scenarios like "Jim Smith" vs. "James Smith".
 
 ---
+# Other Notes
+
+--
 ## File Structure: 
 * **ldaplookup.py:** Takes a .csv of unix usernames and does an LDAP lookup against company directory, returning Full Names from otherwise cryptic usernames. 
 * **namecompare.py:** Compares .csv or .xlsx lists of Full Names against a good list ("census") and bad list ("terminations"). Categorize clear matches, and point out ambiguous ones. 
