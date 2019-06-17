@@ -72,9 +72,14 @@ def ingest(sourcetype):
         
     elif file_to_ingest.endswith('xlsx'): 
         df = xlsx_reader(file_to_ingest)
-        # the next line assumes the xlsx file's first row is header and column names are as follows:
-        df.rename(columns={'First Name':'First','Last Name':'Last'}, inplace=True)
+        
+        # Make sure header has columns for First and Last, catch case where file is First Name or Last Name instead
+        if {'First Name'}.issubset(df.columns):
+            df.rename(columns={'First Name':'First'}, inplace=True)
+        if {'Last Name'}.issubset(df.columns):
+            df.rename(columns={'Last Name':'Last'}, inplace=True)
 
+        
         df = clean(df[['First','Last']])
 
         # add source and fullName columns:
