@@ -22,7 +22,7 @@ def ldaplookup(names):
     input: a list of linux usernames, format:
         bwagner
         edherd
-    goal: lookup each username against ldap and return the fullname, mailname, and email address
+    goal: lookup each username against ldap and return the fullname, mailname
         this will make it easier to compare them to lists of terminated and active employees, 
         since those lists do not contain usernames, only full names
     output: a dict of username, cn, mailname 

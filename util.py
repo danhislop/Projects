@@ -51,7 +51,7 @@ def xlsx_reader(filename):
         print('\n\n Empty data error - is the excel file empty?  The filename is specified in config.ldap_under_review \n\n')
         return
     except pd.errors.ParserError:
-        print('\n\n Parser error - is the csv file missing rows? The filename is specified in config.ldap_under_review \n\n')
+        print('\n\n Parser error - is the excel file missing rows? The filename is specified in config.ldap_under_review \n\n')
         return
     return(dataframe)
     
@@ -70,16 +70,12 @@ def ingest(sourcetype):
         df['source']=sourcetype
         df['fullName']=df['First']+' '+df['Last']
         
-    elif file_to_ingest.endswith('xlsx'):
+    elif file_to_ingest.endswith('xlsx'): 
         df = xlsx_reader(file_to_ingest)
         # the next line assumes the xlsx file's first row is header and column names are as follows:
-        df.rename(columns={'First Name':'First','Last Name':'Last','Email - Primary Work':'Email'}, inplace=True)
+        df.rename(columns={'First Name':'First','Last Name':'Last'}, inplace=True)
 
-        #separate out First, Last columns for cleaning so that email doesn't lose its @.characters
-        df1 = clean(df[['First','Last']])
-        # bring back together with lower-cased email:
-        if {'Email'}.issubset(df.columns):
-            df = pd.concat([df1, df.Email.astype(str).str.lower()], axis=1, sort=False)
+        df = clean(df[['First','Last']])
 
         # add source and fullName columns:
         df['source']=sourcetype

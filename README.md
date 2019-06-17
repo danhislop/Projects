@@ -28,7 +28,7 @@
 		* csv file of Last, First names pulled from the app. If no export is available, names can be scraped from admin website and cleaned up into the .csv.
 		* If your names are "full names" then you must first separate into separate .csv columns as last, first (future improvement). See excel formula hint below
 	* Census File and Terminations File.  Can be either .csv or .xlsx:
-		* EXCEL -Easiest: .xlsx file provided by compliance group: TOP ROW MUST BE COLUMN HEADERS, key column names are "First Name", "Last Name", and "Email - Primary Work". 
+		* EXCEL -Easiest: .xlsx file provided by compliance group: TOP ROW MUST BE COLUMN HEADERS, key column names are "First Name", "Last Name". 
 			Please remove any blank rows at the top, so header row is Row 1.  
 		* CSV: should contain two simple columns "Last" and "First" separated by commas
 			Last,First

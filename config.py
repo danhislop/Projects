@@ -21,9 +21,10 @@ app_under_review can be updated based on which app is being reviewed
 # Setting to 'yes' will first do ldaplookup, then run namecompare on its output
 
 # INPUT FILENAMES FOR APP USER NAMES - must be .csv, leave off extension.  e.g. ldap_under_review = 'mycsvfile_with_no_extension'
-ldap_under_review = 'none'
-app_under_review = 'USWNT_to_audit'
-run_namecompare_against_ldap_results = 'no'
+ldap_under_review = 'hive.datagroup.source'
+#app_under_review = 'USWNT_to_audit'
+app_under_review = 'hive.datagroup.source'
+run_namecompare_against_ldap_results = 'yes'
 
 
 
@@ -34,8 +35,8 @@ ldap_server = 'ldaps://10.1.1.21'
 pwdfile = 'ldapcred.txt'  # make sure to set your username and password into this file
 
 # Environment:  use prod unless testing with pre-defined test files
-env = 'test'    #use small test dataset
-#env = 'prod'     #use larger prod dataset
+#env = 'test'    #use small test dataset
+env = 'prod'     #use larger prod dataset
 
 
 # DO NOT CHANGE THIS LINE:
@@ -44,7 +45,7 @@ if run_namecompare_against_ldap_results == 'yes':
 
 # THE PATHS BELOW REFER TO INPUT (AND SOME OUTPUT) FILENAMES 
 # TERMS AND CENSUS FILES CAN BE .XLSX, BUT MUST:
-    # 1. Have case-sensitive column headers 'Last Name', 'First Name', 'Email'
+    # 1. Have case-sensitive column headers 'Last Name', 'First Name'
     # 2. Have no extra/empty rows before headers - which is usually the case with census/term provided by sox team
 # If TERM/CENSUS are .csv then expecting column headers 'Last' and 'First'
 
