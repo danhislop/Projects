@@ -1,2 +1,0 @@
-[dancred]
-password = Minson1!
