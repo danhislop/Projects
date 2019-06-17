@@ -24,15 +24,15 @@
 ---
 # What you'll need: 
 * Input Files
+	* Census File and Terminations File.  Can be either .csv or .xlsx with these guidelines:
+		* Top row must be column headers with required column names of "First Name", "Last Name" (extra columns won't hurt)
+    	* Make sure to remove any blank rows at the top
+    	* csv example:
+			````Last,First
+			Morgan,Alex````
 	* User list under audit - from your application
 		* csv file of Last, First names pulled from the app. If no export is available, names can be scraped from admin website and cleaned up into the .csv.
-		* If your names are "full names" then you must first separate into separate .csv columns as last, first (future improvement). See excel formula hint below
-	* Census File and Terminations File.  Can be either .csv or .xlsx:
-		* EXCEL -Easiest: .xlsx file provided by compliance group: TOP ROW MUST BE COLUMN HEADERS, key column names are "First Name", "Last Name". 
-			Please remove any blank rows at the top, so header row is Row 1.  
-		* CSV: should contain two simple columns "Last" and "First" separated by commas
-			Last,First
-			Morgan,Alex
+		* If your names are "full names" then you must first separate into separate .csv columns as last, first (future improvement). See excel formula hint at bottom
 			
 * Environment
 	* Tested with python3 environment
