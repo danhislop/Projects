@@ -26,8 +26,8 @@
 The primary use is to compare names between the app under audit.  here, audit means determine which users are still with the company (in census) or not (in term list).
 * Input Files
 	* User list under audit - from your application
-		* csv file of Last, First names pulled from the app. If no export, names can even be scraped from admin website as with Tableau.
-		* If your names are "full names" then for now, you must first separate into separate .csv columns as last, first. 
+		* csv file of Last, First names pulled from the app. If no export is avaialble, names can be scraped from admin website and cleaned up into the .csv.
+		* If your names are "full names" then you must first separate into separate .csv columns as last, first (future improvement). See excel formula hint below
 	* Census File and Terminations File.  Can be either .csv or .xlsx:
 		* EXCEL -Easiest: .xlsx file provided by compliance group: TOP ROW MUST BE COLUMN HEADERS, key column names are "First Name" and "Last Name". 
 			You probably need to remove a few blank lines before input.  
@@ -67,3 +67,12 @@ Some apps only provide usernames, making it hard to match against full names sho
 * **write_output.py:** All functions for writing to xlsx and csv 
 * **config.py:** Settings related to input files, output files, environments
 * **ldapcred.txt:** (in some cases):  if doing LDAP lookups, save your credentials into a text file using example provided, ldapcred_example.txt.  This is a security risk slated for improvement.
+
+--
+## Excel Tip 
+* Given a list of Full Names in excel, the following formulas will exctract First, Last name to create separate columns: 
+
+| Full Name | First Name | Last Name |
+|------------|----------|----------|
+|'Alex Morgan' in cell A2|=LEFT(A2,FIND(" ",A2,1)-1) |=RIGHT(A2,LEN(A2)-FIND(" ",A2,1))|
+|Alex Morgan|Alex|Morgan|
