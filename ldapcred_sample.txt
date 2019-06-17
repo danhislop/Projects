@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jun 17 11:03:56 2019
+
+@author: dan hislop |  https://github.com/danhislop | hislopdan@gmail.com
+
+This file should contain your domain, username, and password in order to do LDAP lookup.
+Do not check this file in to repo - this is an unsecure way to handle auth and is on list of improvements to make.
+"""
+
+
+[my_account]
+username = mydomain\myusername
+password = my*_password
