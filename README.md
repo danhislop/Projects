@@ -25,7 +25,7 @@
 # What you'll need: 
 * Input Files
 	* Census File and Terminations File.  Can be either .csv or .xlsx with these guidelines:
-		* Top row must be column headers with required column names of "First Name", "Last Name" (extra columns won't hurt)
+		* Top row must be column headers with required column names of "First", "Last" (extra columns won't hurt)
     	* Make sure to remove any blank rows at the top
     	* csv example:
 			````
@@ -79,7 +79,7 @@ Some apps only provide usernames, making it hard to match against full names sho
 ## Excel Tip 
 * Given a list of Full Names in excel, the following formulas will extract First, Last name to create separate columns: 
 
-| Full Name | First Name | Last Name |
+| Full Name | First | Last |
 |------------|----------|----------|
 |'Alex Morgan' in cell A2|=LEFT(A2,FIND(" ",A2,1)-1) |=RIGHT(A2,LEN(A2)-FIND(" ",A2,1))|
 |Alex Morgan|Alex|Morgan|
