@@ -1,5 +1,5 @@
 # NameCompare matches lists of names against each other. 
-### When input file contains linux usernames (instead of full names), an LDAP lookup will return fullnames for comparison.
+### With LDAP lookup feature, names can be fullnames or unix usernames.
 
 ---
 
