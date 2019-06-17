@@ -28,8 +28,10 @@
 		* Top row must be column headers with required column names of "First Name", "Last Name" (extra columns won't hurt)
     	* Make sure to remove any blank rows at the top
     	* csv example:
-			````Last,First
-			Morgan,Alex````
+			````
+			Last,First
+			Morgan,Alex
+			````
 	* User list under audit - from your application
 		* csv file of Last, First names pulled from the app. If no export is available, names can be scraped from admin website and cleaned up into the .csv.
 		* If your names are "full names" then you must first separate into separate .csv columns as last, first (future improvement). See excel formula hint at bottom
