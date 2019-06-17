@@ -64,7 +64,7 @@ Some apps only provide usernames, making it hard to match against full names sho
 ---
 # Other Notes
 
---
+
 ## File Structure: 
 * **ldaplookup.py:** Takes a .csv of unix usernames and does an LDAP lookup against company directory, returning Full Names from otherwise cryptic usernames. 
 * **namecompare.py:** Compares .csv or .xlsx lists of Full Names against a good list ("census") and bad list ("terminations"). Categorize clear matches, and point out ambiguous ones. 
@@ -73,7 +73,7 @@ Some apps only provide usernames, making it hard to match against full names sho
 * **config.py:** Settings related to input files, output files, environments
 * **ldapcred.txt:** (in some cases):  if doing LDAP lookups, save your credentials into a text file using example provided, ldapcred_example.txt.  This is a security risk slated for improvement.
 
---
+
 ## Excel Tip 
 * Given a list of Full Names in excel, the following formulas will extract First, Last name to create separate columns: 
 
