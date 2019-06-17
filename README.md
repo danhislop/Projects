@@ -1,6 +1,5 @@
-# NameCompare does 2 things:
-# 1. **_Finds full name matches_** by comparing your user list to a 'good' and 'bad' list
-# 2. **_Looks up linux usernames_** on an LDAP server and returns full names, to assist with step 1
+# NameCompare matches an application user list against a good list (census) and bad list (terminations)
+## NameCompare Can do an LDAP lookup when input is linux usernames instead of full names
 
 ---
 

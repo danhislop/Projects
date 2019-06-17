@@ -44,17 +44,17 @@ if run_namecompare_against_ldap_results == 'yes':
 
 # THE PATHS BELOW REFER TO INPUT (AND SOME OUTPUT) FILENAMES 
 # TERMS AND CENSUS FILES CAN BE .XLSX, BUT MUST:
-    # 1. Have case-sensitive column headers 'Last Name' and 'First Name'
+    # 1. Have case-sensitive column headers 'Last Name', 'First Name', 'Email'
     # 2. Have no extra/empty rows before headers - which is usually the case with census/term provided by sox team
 # If TERM/CENSUS are .csv then expecting column headers 'Last' and 'First'
 
 paths = {
         'prod': {
-            #'terms_path' : './data/terms2019.csv',
-            #'census_path' : './data/census2019.csv',
+            #'terms_path' : './data/terms2019.csv',    # sourcefile can be .csv or .xlsx
+            #'census_path' : './data/census2019.csv',  # sourcefile can be .csv or .xlsx
             'terms_path' : './data/Termination Report.xlsx',
             'census_path' : './data/Employee Census.xlsx',
-            'users_path' : './data/' + app_under_review + '.csv',
+            'users_path' : './data/' + app_under_review + '.csv',  # must be .csv
             'ldapusers_path' : './data/' + ldap_under_review + '.csv',
             'ldap_output' : './data/' + ldap_under_review + '_ldap_output.csv',
             'namecompare_output' : './data/namecompare_output_' + app_under_review + '.xlsx'},
