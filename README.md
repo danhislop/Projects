@@ -70,7 +70,7 @@ Some apps only provide usernames, making it hard to match against full names sho
 
 --
 ## Excel Tip 
-* Given a list of Full Names in excel, the following formulas will exctract First, Last name to create separate columns: 
+* Given a list of Full Names in excel, the following formulas will extract First, Last name to create separate columns: 
 
 | Full Name | First Name | Last Name |
 |------------|----------|----------|
