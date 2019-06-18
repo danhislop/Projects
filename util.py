@@ -57,45 +57,37 @@ def xlsx_reader(filename):
     
 def ingest(sourcetype):
     '''
-    purpose: iterate through a datasource by reading in csv and cleaning to prepare for comparison
+    purpose: read in csv or xlsx to dataframe and clean to prepare for comparison
     input:  type will be which datasource (terms, census, or users) and corresponds to a path in config.py
     output: is a dataframe passed back
     '''
     
     file_to_ingest = config.paths[config.env][sourcetype+"_path"]
 
-
     if file_to_ingest.endswith('.csv'):
         df = clean(csv_reader(file_to_ingest, 'source'))  
-        df['source']=sourcetype
-        df['fullName']=df['First']+' '+df['Last']
         
     elif file_to_ingest.endswith('xlsx'): 
-        df = xlsx_reader(file_to_ingest)
-        
-        # Make sure header has columns for First and Last, catch case where file is First Name or Last Name instead
-        if {'First Name'}.issubset(df.columns):
-            df.rename(columns={'First Name':'First'}, inplace=True)
-        if {'Last Name'}.issubset(df.columns):
-            df.rename(columns={'Last Name':'Last'}, inplace=True)
-
-        
-        df = clean(df[['First','Last']])
-
-        # add source and fullName columns:
-        df['source']=sourcetype
-        df['fullName']=df['First']+' '+df['Last']
-
+        df = clean(xlsx_reader(file_to_ingest))
+ 
     else:
         logging.warning('%s will not work: file type must be either .csv or .xlsx', file_to_ingest)
         print('file type must be either .csv or .xlsx')
+
+    # Make sure header has columns for First and Last, catch case where file is First Name or Last Name instead
+    if {'First Name'}.issubset(df.columns):
+         df.rename(columns={'First Name':'First'}, inplace=True)
+    if {'Last Name'}.issubset(df.columns):
+         df.rename(columns={'Last Name':'Last'}, inplace=True)    
+    df['source']=sourcetype
+    df['fullName']=df['First']+' '+df['Last']
 
     logging.info('%s now ingested with %s rows and ready to process', file_to_ingest, len(df.index))
 
     if type != 'users':   #terms and census (not users) sometimes have duplicates which throws off the matching
         df = df.drop_duplicates(subset = ['fullName'], keep='last')
     logging.info('%s Dataframe now has %s rows, after dropping duplicates', file_to_ingest, len(df.index))
-    print('\n The sourcetype -->',sourcetype, '<-- dataframe starts with: \n', df.head(9),'\n\n','------------------------'*3)
+    print('\n',sourcetype, '<-- dataframe starts with: \n', df[['First','Last','source']].head(),'\n\n','----------------'*2)
     
     return(df)    
     
