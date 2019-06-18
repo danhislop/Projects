@@ -31,7 +31,7 @@ run_namecompare_against_ldap_results = 'no'
 # ---------- SET BELOW SECTION ONCE EACH QUARTER  --------------------------------------
 
 # LDAP Server information, must be reachable from your host (in office or via vpn)
-ldap_server = 'ldaps://10.1.1.21'
+ldap_server = 'ldaps://10.1.1.1' # enter valid ldap_server IP
 pwdfile = 'ldapcred.txt'  # make sure to set your username and password into this file
 
 # Environment:  use prod unless testing with pre-defined test files
