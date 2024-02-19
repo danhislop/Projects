@@ -23,4 +23,4 @@ A python class library which generates both discrete and continuous random varia
 - Allow parameter setting from the input menu, e.g. lambda value.
 
 ## Author
-- Dan Hislop, for a class project with Georgia Tech's ISYE6644 Simulation class.
+- Dan Hislop, for a class project with Georgia Tech's ISYE6644 Simulation class as part of MS Analytics program.
