@@ -8,7 +8,7 @@ Use case: a list of customers and months (key columns) and 1-to-many other colum
 ### Usage: 
  - Enter path and file names into compare_dataframes.py
  - Specify key column. If 2 key columns, set `two_column_index = True`
- - Execute. output is on screen
+ - Execute: python compare_dataframes.py     (output is on screen)
 
 
 ---
