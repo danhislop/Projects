@@ -1,7 +1,23 @@
-# NameCompare matches lists of names against each other. 
-### With LDAP lookup feature, names can be fullnames or unix usernames.
+# Utility Projects
+
+## 1. Compare_Dataframes takes 2 .csv files as inputs, and finds differences
+### The .csv's are expected to have 1 or 2 key columns to base comparison on
+This is a key<-->key compare, not a "line by line" compare. Allows for missing keys.
+Use case: a list of customers and months (key columns) and 1-to-many other columns containing values.
+
+### Usage: 
+ - Enter path and file names into compare_dataframes.py
+ - Specify key column. If 2 key columns, set `two_column_index = True`
+ - Execute. output is on screen
+
 
 ---
+
+
+## 2. NameCompare matches lists of names against each other. 
+### With LDAP lookup feature, names can be fullnames or unix usernames.
+Location: Projects/NameCompare folder
+
 
 ## Why use NameCompare?
 #### This project was initiated for SOX compliance. During compliance week, we are given:
