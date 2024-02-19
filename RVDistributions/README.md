@@ -19,7 +19,6 @@ A python class library which generates both discrete and continuous random varia
 ![example side by side plot](./dist_weibull.png "Weibull Distribution").
 
 ## Future Improvements
-- Update the input menu to allow a number instead of typed name, for easier input.
 - Allow parameter setting from the input menu, e.g. lambda value.
 
 ## Author
